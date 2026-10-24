@@ -1,0 +1,7 @@
+# Arquivos do sistema e de editores (não fazem parte do site)
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+~$*
+.vscode/

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Estudos com flash cards e repetição espaçada: organize matérias, revise na hora certa e chegue na prova com tudo revisado.">
+  <meta name="author" content="Isaacrdesouza">
+  <meta name="theme-color" content="#0f1115">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Aplica o tema salvo antes de desenhar a página (evita "piscar" o tema errado) -->
+  <script>
+    (function () {
+      var tema = 'escuro';
+      try { tema = localStorage.getItem('flashcards-tema') || 'escuro'; } catch (e) {}
+      if (tema === 'sistema') tema = window.matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'escuro';
+      document.documentElement.setAttribute('data-tema', tema);
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', tema === 'claro' ? '#f4f5f8' : '#0f1115');
+    })();
+  </script>
+  <title>Flash Cards · Estudos</title>
+
+  <!-- Ícone da aba (arquivo local, sem dependências externas) -->
+  <link rel="icon" href="assets/icone.svg" type="image/svg+xml">
+
+  <!-- Estilos: base (variáveis e layout), componentes reutilizáveis, páginas e sessão de estudo -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/paginas.css">
+  <link rel="stylesheet" href="css/estudo.css">
+  <link rel="stylesheet" href="css/tutorial.css">
+</head>
+<body>
+  <!-- Atalho de acessibilidade para quem navega pelo teclado -->
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- =========================================================
+       Biblioteca de ícones (SVG inline = zero requisições extras).
+       Uso no código: <svg class="icone"><use href="#i-nome"></use></svg>
+       ========================================================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" hidden>
+    <symbol id="i-inicio" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-livro" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5zM4 19.5A1.5 1.5 0 0 0 5.5 21H20v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-importar" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-grafico" viewBox="0 0 24 24"><path d="M4 20V10m6 10V4m6 16v-7m4 7H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-config" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-mais" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-editar" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-lixeira" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 13h10l1-13M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
+    <symbol id="i-imagem" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="m4 18 5-5 4 4 3-3 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-voltar" viewBox="0 0 24 24"><path d="M15 18 9 12l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-avancar" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-fechar" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-fogo" viewBox="0 0 24 24"><path d="M12 3s6 5 6 11a6 6 0 0 1-12 0c0-3 2-5 2-5s0 3 2 3c0-4 2-9 2-9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-cartoes" viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 4h12a2 2 0 0 1 2 2v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-olho" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-repetir" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15m0 5v-5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-lua" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-nuvem" viewBox="0 0 24 24"><path d="M7 18h10.5a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.4 9.1 4.5 4.5 0 0 0 7 18z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-email" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-cadeado" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-olho-fechado" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.6 6.6C3.8 8.4 2 12 2 12s4 7 10 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sair" viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ajuda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-pasta" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2.2h8.4A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-texto"viewBox="0 0 24 24"><path d="M5 6V4h14v2M12 4v16m-3 0h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </svg>
+
+  <div class="app">
+    <!-- Navegação principal: barra lateral (tablet/desktop) ou barra inferior (celular) -->
+    <nav class="navegacao" aria-label="Navegação principal">
+      <a class="navegacao__marca" href="#/inicio" aria-label="Flash Cards — início">
+        <img src="assets/icone.svg" alt="" width="32" height="32">
+        <span class="navegacao__nome">Flash Cards</span>
+      </a>
+      <ul class="navegacao__lista">
+        <li><a class="navegacao__item" href="#/inicio" data-rota="inicio reorganizar"><svg class="icone" aria-hidden="true"><use href="#i-inicio"></use></svg><span>Início</span></a></li>
+        <li><a class="navegacao__item" href="#/materias" data-rota="materias materia cartao"><svg class="icone" aria-hidden="true"><use href="#i-livro"></use></svg><span>Matérias</span></a></li>
+        <li class="navegacao__so-grande"><a class="navegacao__item" href="#/busca" data-rota="busca"><svg class="icone" aria-hidden="true"><use href="#i-busca"></use></svg><span>Buscar</span></a></li>
+        <li><a class="navegacao__item" href="#/cronograma" data-rota="cronograma"><svg class="icone" aria-hidden="true"><use href="#i-calendario"></use></svg><span>Cronograma</span></a></li>
+        <li><a class="navegacao__item" href="#/importar" data-rota="importar"><svg class="icone" aria-hidden="true"><use href="#i-importar"></use></svg><span>Importar</span></a></li>
+        <li><a class="navegacao__item" href="#/estatisticas" data-rota="estatisticas"><svg class="icone" aria-hidden="true"><use href="#i-grafico"></use></svg><span>Estatísticas</span></a></li>
+        <li><a class="navegacao__item" href="#/configuracoes" data-rota="configuracoes lixeira conta"><svg class="icone" aria-hidden="true"><use href="#i-config"></use></svg><span>Ajustes</span></a></li>
+      </ul>
+      <!-- Situação da sincronização com a nuvem (ver js/nuvem.js) -->
+      <a class="nuvem-menu" href="#/conta" id="nuvem-menu" title="Conta e nuvem">
+        <svg class="icone" aria-hidden="true"><use href="#i-nuvem"></use></svg>
+        <span class="nuvem-menu__texto">Conta</span>
+      </a>
+    </nav>
+
+    <!-- Área onde cada página é desenhada pelo JavaScript (ver js/rotas.js) -->
+    <main id="conteudo" class="conteudo" tabindex="-1">
+      <p class="carregando">Carregando…</p>
+    </main>
+  </div>
+
+  <!-- Janela modal reutilizada por todo o sistema (ver Util.abrirModal) -->
+  <dialog id="modal" class="modal"></dialog>
+
+  <!-- Avisos rápidos (toasts). aria-live faz o leitor de tela anunciá-los -->
+  <div id="area-avisos" class="avisos" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="noscript">Este site precisa do JavaScript ativado para funcionar.</p>
+  </noscript>
+
+  <!-- Scripts comuns (sem módulos ES, para funcionar abrindo o arquivo direto do disco).
+       A ordem importa: utilidades → dados → interface → páginas → inicialização. -->
+  <script src="js/util.js" defer></script>
+  <script src="js/banco.js" defer></script>
+  <script src="js/repeticao.js" defer></script>
+  <script src="js/estado.js" defer></script>
+  <script src="js/vendor/supabase.js" defer></script>
+  <script src="js/nuvem.js" defer></script>
+  <script src="js/componentes.js" defer></script>
+  <script src="js/rotas.js" defer></script>
+  <script src="js/lista-cartoes.js" defer></script>
+  <script src="js/acesso.js" defer></script>
+  <script src="js/tutorial.js" defer></script>
+  <script src="js/tutoriais.js" defer></script>
+  <script src="js/paginas/inicio.js" defer></script>
+  <script src="js/paginas/materias.js" defer></script>
+  <script src="js/paginas/materia.js" defer></script>
+  <script src="js/paginas/editor-cartao.js" defer></script>
+  <script src="js/anki.js" defer></script>
+  <script src="js/paginas/importar-anki.js" defer></script>
+  <script src="js/paginas/importar.js" defer></script>
+  <script src="js/paginas/estudar.js" defer></script>
+  <script src="js/paginas/cronograma.js" defer></script>
+  <script src="js/paginas/reorganizar.js" defer></script>
+  <script src="js/paginas/busca.js" defer></script>
+  <script src="js/paginas/lixeira.js" defer></script>
+  <script src="js/paginas/conta.js" defer></script>
+  <script src="js/paginas/estatisticas.js" defer></script>
+  <script src="js/paginas/configuracoes.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

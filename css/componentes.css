@@ -1,0 +1,233 @@
+/* =============================================================
+   componentes.css — Peças reutilizáveis da interface
+   (botões, campos, painéis, selos, modal, avisos, gráficos…)
+   ============================================================= */
+
+/* ---------- Cabeçalho de página ---------- */
+.pagina-cabecalho {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: var(--esp-3) var(--esp-4);
+  margin-bottom: var(--esp-5);
+}
+.pagina-cabecalho__textos { flex: 1 1 260px; min-width: 0; }
+.pagina-titulo { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); }
+.pagina-titulo:focus { outline: none; }
+.pagina-subtitulo { color: var(--texto-suave); margin-top: 2px; }
+.pagina-cabecalho__acoes { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+
+/* ---------- Botões ---------- */
+.botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--esp-2);
+  min-height: var(--toque);
+  padding: 0 var(--esp-4);
+  border: 1px solid var(--borda-forte);
+  border-radius: var(--raio-p);
+  background: var(--superficie-2);
+  color: var(--texto);
+  font-weight: 600; font-size: 15px;
+  text-decoration: none; white-space: nowrap;
+  transition: background var(--transicao), border-color var(--transicao), transform var(--transicao);
+  user-select: none;
+}
+.botao:hover { background: var(--superficie-3); }
+.botao:active { transform: scale(.97); }
+.botao:disabled, .botao[aria-disabled="true"] { opacity: .5; cursor: not-allowed; transform: none; }
+.botao .icone { width: 20px; height: 20px; }
+
+.botao--primario { background: var(--destaque); border-color: var(--destaque); color: var(--texto-sobre-destaque); }
+.botao--primario:hover { background: var(--destaque-forte); }
+.botao--fantasma { background: transparent; border-color: transparent; color: var(--texto-2); }
+.botao--fantasma:hover { background: var(--superficie-2); color: var(--texto); }
+.botao--perigo { background: transparent; border-color: rgba(242, 104, 95, .5); color: var(--texto-vermelho); }
+.botao--perigo:hover { background: rgba(242, 104, 95, .12); }
+.botao--grande { min-height: 56px; padding: 0 var(--esp-5); font-size: 17px; border-radius: var(--raio); }
+.botao--icone { width: var(--toque); padding: 0; }
+.botao--pequeno { min-height: 36px; padding: 0 var(--esp-3); font-size: 14px; }
+.botao--pequeno.botao--icone { width: 36px; padding: 0; }
+.botao--pequeno .icone { width: 18px; height: 18px; }
+.botao--bloco { width: 100%; }
+
+/* ---------- Campos de formulário ---------- */
+.campo { display: flex; flex-direction: column; gap: 6px; border: 0; padding: 0; min-width: 0; }
+.campo__rotulo { font-size: 14px; font-weight: 600; color: var(--texto-2); padding: 0; }
+.campo__ajuda { font-size: 13px; color: var(--texto-suave); }
+.entrada, .campo input[type="text"], .campo input[type="number"], .campo input[type="search"],
+.campo select, .campo textarea {
+  width: 100%;
+  min-height: var(--toque);
+  padding: 10px var(--esp-3);
+  background: var(--fundo);
+  border: 1px solid var(--borda-forte);
+  border-radius: var(--raio-p);
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+.campo textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+.entrada:focus, .campo input:focus, .campo select:focus, .campo textarea:focus {
+  outline: none; border-color: var(--destaque); box-shadow: 0 0 0 3px var(--destaque-suave);
+}
+.campo select { appearance: none; padding-right: 36px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--texto-suave) 50%), linear-gradient(135deg, var(--texto-suave) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px; background-repeat: no-repeat; }
+.grade-campos { display: grid; gap: var(--esp-4); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.formulario { display: grid; gap: var(--esp-4); }
+
+/* Interruptor (checkbox estilizado) */
+.interruptor { display: flex; align-items: center; justify-content: space-between; gap: var(--esp-4); min-height: var(--toque); cursor: pointer; }
+.interruptor input { appearance: none; width: 48px; height: 28px; border-radius: 99px; background: var(--superficie-3); position: relative; flex-shrink: 0; transition: background var(--transicao); cursor: pointer; }
+.interruptor input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--texto); transition: transform var(--transicao); }
+.interruptor input:checked { background: var(--destaque); }
+.interruptor input:checked::after { transform: translateX(20px); background: var(--texto-sobre-destaque); }
+
+/* Seletor de cores da matéria */
+.seletor-cores { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+.cor-opcao { position: relative; cursor: pointer; }
+.cor-opcao input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.cor-opcao span[aria-hidden] { display: block; width: 40px; height: 40px; border-radius: 50%; background: var(--cor); border: 3px solid transparent; box-shadow: inset 0 0 0 2px var(--superficie); transition: transform var(--transicao); }
+.cor-opcao input:checked + span { border-color: var(--texto); transform: scale(1.08); }
+.cor-opcao input:focus-visible + span { outline: 3px solid var(--destaque-forte); outline-offset: 2px; }
+
+/* Seletor de dias da semana */
+.seletor-dias { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dia-opcao { position: relative; }
+.dia-opcao input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.dia-opcao span { display: grid; place-items: center; min-height: var(--toque); border-radius: var(--raio-p); border: 1px solid var(--borda-forte); font-size: 14px; font-weight: 600; color: var(--texto-2); transition: all var(--transicao); }
+.dia-opcao input:checked + span { background: var(--destaque); border-color: var(--destaque); color: var(--texto-sobre-destaque); }
+.dia-opcao input:focus-visible + span { outline: 3px solid var(--destaque-forte); outline-offset: 2px; }
+
+/* ---------- Painéis (caixas de conteúdo) ---------- */
+.painel {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-g);
+  padding: var(--esp-5);
+}
+.painel + .painel, .secao + .secao { margin-top: var(--esp-5); }
+.painel__cabecalho { display: flex; align-items: center; justify-content: space-between; gap: var(--esp-3); flex-wrap: wrap; margin-bottom: var(--esp-4); }
+.painel__titulo { font-size: 1.125rem; }
+.painel__nota { color: var(--texto-suave); font-size: 14px; }
+@media (max-width: 767px) { .painel { padding: var(--esp-4); border-radius: var(--raio); } }
+
+/* ---------- Selos, chips e pontos de cor ---------- */
+.selo { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 99px; font-size: 12.5px; font-weight: 600; background: var(--superficie-3); color: var(--texto-2); white-space: nowrap; }
+.selo--novo { background: rgba(90, 169, 255, .15); color: var(--texto-azul); }
+.selo--vencido { background: rgba(76, 195, 138, .15); color: var(--texto-verde); }
+.selo--aprendendo { background: rgba(242, 104, 95, .15); color: var(--texto-vermelho); }
+.ponto-cor { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--cor); flex-shrink: 0; }
+.chip-materia { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 99px; background: var(--superficie-2); border: 1px solid var(--borda); font-size: 13px; font-weight: 600; color: var(--texto-2); max-width: 100%; }
+.chip-materia span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dias-mini { display: inline-flex; gap: 3px; }
+.dias-mini span { width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; background: var(--superficie-2); color: var(--texto-suave); }
+.dias-mini span.ativo { background: var(--destaque-suave); color: var(--destaque-forte); }
+
+/* ---------- Estado vazio ---------- */
+.vazio { text-align: center; padding: var(--esp-7) var(--esp-4); display: flex; flex-direction: column; align-items: center; gap: var(--esp-3); }
+.vazio__icone { width: 72px; height: 72px; border-radius: 22px; display: grid; place-items: center; background: var(--destaque-suave); color: var(--destaque-forte); margin-bottom: var(--esp-2); }
+.vazio__icone .icone { width: 34px; height: 34px; }
+.vazio__titulo { font-size: 1.25rem; }
+.vazio__texto { color: var(--texto-suave); max-width: 46ch; }
+.vazio__acoes { display: flex; gap: var(--esp-2); flex-wrap: wrap; justify-content: center; margin-top: var(--esp-2); }
+
+/* ---------- Modal (<dialog>) ---------- */
+.modal {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--borda-forte);
+  border-radius: var(--raio-g);
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: var(--sombra);
+}
+.modal[open] { animation: modal-entrar 220ms cubic-bezier(.2, .8, .3, 1); }
+.modal::backdrop { background: rgba(5, 6, 9, .72); backdrop-filter: blur(3px); }
+@keyframes modal-entrar { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+.modal__form { display: flex; flex-direction: column; max-height: inherit; }
+.modal__cabecalho { padding: var(--esp-5) var(--esp-5) 0; }
+.modal__cabecalho h2 { font-size: 1.25rem; }
+.modal__corpo { padding: var(--esp-4) var(--esp-5); overflow-y: auto; display: grid; gap: var(--esp-4); }
+.modal__corpo p { color: var(--texto-2); }
+/* O botão de confirmar vem primeiro no HTML (Enter confirma); aqui invertemos a ordem visual */
+.modal__rodape { display: flex; flex-direction: row-reverse; gap: var(--esp-2); padding: var(--esp-4) var(--esp-5) var(--esp-5); flex-wrap: wrap; }
+
+/* ---------- Avisos (toasts) ---------- */
+.avisos { position: fixed; z-index: 60; left: 50%; transform: translateX(-50%); bottom: calc(90px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: var(--esp-2); pointer-events: none; width: max-content; max-width: calc(100vw - 32px); }
+@media (min-width: 768px) { .avisos { bottom: var(--esp-5); } }
+.aviso { background: var(--superficie-3); color: var(--texto); border: 1px solid var(--borda-forte); padding: var(--esp-3) var(--esp-4); border-radius: var(--raio); box-shadow: var(--sombra); font-weight: 500; animation: aviso-entrar 240ms ease-out; }
+.aviso--sucesso { border-color: rgba(76, 195, 138, .6); }
+.aviso--erro { border-color: rgba(242, 104, 95, .7); }
+.aviso.saindo { opacity: 0; transform: translateY(8px); transition: all 240ms; }
+@keyframes aviso-entrar { from { opacity: 0; transform: translateY(12px); } }
+
+/* ---------- Faixa de alerta ---------- */
+.faixa { display: flex; align-items: center; gap: var(--esp-3); flex-wrap: wrap; padding: var(--esp-3) var(--esp-4); border-radius: var(--raio); background: rgba(240, 164, 58, .1); border: 1px solid rgba(240, 164, 58, .35); color: var(--texto-ambar); margin-bottom: var(--esp-5); }
+.faixa p { flex: 1 1 240px; }
+
+/* ---------- Lista de linhas ---------- */
+.lista { list-style: none; padding: 0; display: flex; flex-direction: column; }
+.lista > li + li { border-top: 1px solid var(--borda); }
+
+/* ---------- Gráfico de barras simples (sem bibliotecas) ---------- */
+.grafico { --altura: 160px; }
+.grafico__barras { list-style: none; padding: 0; height: var(--altura); display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--borda-forte); }
+.grafico__barras li { flex: 1; height: 100%; display: flex; align-items: flex-end; position: relative; }
+.grafico__barra { width: 100%; max-width: 28px; margin: 0 auto; min-height: 2px; background: var(--destaque); border-radius: 4px 4px 0 0; transition: filter var(--transicao); }
+.grafico__barras li:hover .grafico__barra, .grafico__barras li:focus-visible .grafico__barra { filter: brightness(1.25); }
+.grafico__barra--hoje { background: var(--destaque-forte); }
+.grafico__barra--zero { background: var(--superficie-3); }
+.grafico__dica { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--superficie-3); border: 1px solid var(--borda-forte); color: var(--texto); padding: 4px 8px; border-radius: 6px; font-size: 12px; white-space: nowrap; pointer-events: none; display: none; z-index: 2; }
+.grafico__barras li:nth-child(-n+3) .grafico__dica { left: 0; transform: none; }
+.grafico__barras li:nth-last-child(-n+3) .grafico__dica { left: auto; right: 0; transform: none; }
+.grafico__barras li:hover .grafico__dica, .grafico__barras li:focus-visible .grafico__dica { display: block; }
+.grafico__eixo { display: flex; justify-content: space-between; color: var(--texto-suave); font-size: 12px; margin-top: 6px; }
+.grafico details { margin-top: var(--esp-3); color: var(--texto-suave); font-size: 14px; }
+.grafico summary { cursor: pointer; min-height: 32px; display: inline-flex; align-items: center; }
+
+/* Tabela simples (usada também como alternativa acessível aos gráficos) */
+.tabela { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: var(--esp-2); }
+.tabela th, .tabela td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--borda); }
+.tabela th { color: var(--texto-suave); font-weight: 600; }
+.tabela td.num, .tabela th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Barras horizontais (taxa de acerto por matéria) */
+.barras-h { list-style: none; padding: 0; display: grid; gap: var(--esp-3); }
+.barras-h li { display: grid; grid-template-columns: minmax(110px, 200px) 1fr 52px; align-items: center; gap: var(--esp-3); }
+.barras-h__nome { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; color: var(--texto-2); }
+.barras-h__nome span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barras-h__trilho { display: block; height: 10px; background: var(--superficie-3); border-radius: 99px; overflow: hidden; }
+.barras-h__preenchimento { display: block; height: 100%; background: var(--cor); border-radius: 99px; }
+.barras-h__valor { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 14px; }
+
+/* Barra de progresso */
+.progresso { height: 6px; background: var(--superficie-3); border-radius: 99px; overflow: hidden; }
+.progresso__barra { height: 100%; background: var(--destaque); border-radius: 99px; transition: width 300ms ease; }
+
+/* ---------- Selo de cartão suspenso ---------- */
+.selo--suspenso { background: var(--superficie-3); color: var(--texto-suave); text-decoration: line-through; }
+
+/* ---------- Formatação simples dos cartões ---------- */
+.marca-texto { background: rgba(240, 200, 60, .35); color: inherit; padding: 0 .15em; border-radius: 3px; }
+.cor-texto--vermelho { color: var(--texto-vermelho); }
+.cor-texto--azul { color: var(--texto-azul); }
+.cor-texto--verde { color: var(--texto-verde); }
+.cor-texto--laranja { color: var(--texto-ambar); }
+.lista-formatada { text-align: left; display: inline-block; margin: .2em 0; padding-left: 1.4em; }
+.lista-formatada li + li { margin-top: .15em; }
+
+/* Barra de botões de formatação acima dos campos de texto */
+.barra-formato { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; background: var(--superficie-2); border: 1px solid var(--borda); border-radius: var(--raio-p) var(--raio-p) 0 0; margin-bottom: -7px; position: relative; z-index: 1; }
+.barra-formato + textarea { border-top-left-radius: 0 !important; border-top-right-radius: 0 !important; }
+.barra-formato__botao { min-width: 36px; height: 34px; padding: 0 8px; display: inline-grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--texto-2); font-size: 15px; line-height: 1; }
+.barra-formato__botao:hover { background: var(--superficie-3); color: var(--texto); }
+.barra-formato__botao[data-fmt^="cor:"] { min-width: 32px; }
+.barra-formato__botao[data-fmt="limpar"] { margin-left: auto; }
+.amostra-cor { font-weight: 800; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 3px; }
+.previa-formato { margin-top: 2px; padding: var(--esp-2) var(--esp-3); border-radius: var(--raio-p); background: var(--superficie-2); border: 1px dashed var(--borda-forte); font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.previa-formato__rotulo { display: block; font-size: 12px; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+
+/* Aviso com botão (ex.: Desfazer) */
+.aviso { display: flex; align-items: center; gap: var(--esp-3); }
+.aviso--com-acao { pointer-events: auto; }
+.aviso__acao { border: 0; background: transparent; color: var(--destaque-forte); font-weight: 700; padding: 6px 8px; margin: -6px -8px -6px 0; border-radius: 6px; cursor: pointer; }
+.aviso__acao:hover { background: var(--destaque-suave); }

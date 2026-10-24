@@ -1,0 +1,125 @@
+/* =============================================================
+   tutorial.css — Tutoriais interativos e "Primeiros passos"
+   ============================================================= */
+
+/* ---------- Sobreposição: escurece tudo menos o elemento destacado ---------- */
+.tour { position: fixed; inset: 0; z-index: 70; pointer-events: none; }
+.tour__sombra { position: fixed; background: rgba(6, 8, 12, .62); pointer-events: auto; }
+:root[data-tema="claro"] .tour__sombra { background: rgba(23, 26, 33, .45); }
+.tour__anel {
+  position: fixed; border-radius: 12px; pointer-events: none;
+  box-shadow: 0 0 0 2px var(--destaque-forte), 0 0 0 6px color-mix(in srgb, var(--destaque) 35%, transparent);
+}
+.tour--clique .tour__anel { animation: tour-pulsar 1.4s ease-in-out infinite; }
+@keyframes tour-pulsar { 50% { box-shadow: 0 0 0 2px var(--destaque-forte), 0 0 0 12px color-mix(in srgb, var(--destaque) 18%, transparent); } }
+.tour__tampa { position: fixed; pointer-events: auto; background: transparent; }
+
+/* ---------- Balão ---------- */
+.tour__balao {
+  position: fixed; pointer-events: auto;
+  width: min(360px, calc(100vw - 24px));
+  display: grid; gap: var(--esp-3);
+  padding: var(--esp-4) var(--esp-5) var(--esp-4);
+  background: var(--superficie); color: var(--texto);
+  border: 1px solid var(--borda-forte); border-radius: var(--raio-g);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+}
+.tour__balao--entrando { animation: tour-entrar 200ms cubic-bezier(.2, .7, .3, 1); }
+.tour__balao:focus { outline: none; }
+.tour__balao--largo { width: min(460px, calc(100vw - 24px)); }
+.tour__balao--centro { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%); }
+@keyframes tour-entrar { from { opacity: 0; translate: 0 6px; } }
+.tour__balao--chamar { animation: tour-chamar 360ms ease; }
+.tour__balao--centro.tour__balao--chamar { animation: none; }
+@keyframes tour-chamar { 30% { transform: translateX(-6px); } 60% { transform: translateX(5px); } }
+
+.tour__topo { display: flex; align-items: center; justify-content: space-between; gap: var(--esp-2); margin-right: calc(-1 * var(--esp-2)); }
+.tour__passo { font-size: 12.5px; font-weight: 700; letter-spacing: .02em; color: var(--destaque-forte); text-transform: uppercase; }
+.tour__fechar { width: 36px; height: 36px; display: grid; place-items: center; border: 0; background: transparent; color: var(--texto-suave); border-radius: 8px; }
+.tour__fechar:hover { background: var(--superficie-2); color: var(--texto); }
+.tour__fechar .icone { width: 18px; height: 18px; }
+.tour__corpo { display: grid; gap: var(--esp-2); }
+.tour__titulo { font-size: 1.2rem; letter-spacing: -.01em; }
+.tour__balao--largo .tour__titulo { font-size: 1.4rem; }
+.tour__texto { color: var(--texto-2); font-size: 15px; line-height: 1.55; }
+.tour__texto p, .tour__texto ul, .tour__texto ol { margin: 0; }
+.tour__texto > * + * { margin-top: var(--esp-3); }
+.tour__texto strong, .tour__texto b { color: var(--texto); }
+.tour__texto kbd, .tour__dica-clique kbd { font-family: var(--fonte-mono); font-size: 12.5px; padding: 1px 6px; border-radius: 5px; background: var(--superficie-3); border: 1px solid var(--borda-forte); }
+.tour__texto .contagem { display: inline-block; min-width: 0; padding: 0 7px; font-size: 13px; }
+.tour__dica-clique { display: flex; align-items: center; gap: 6px; margin: 0; padding: var(--esp-2) var(--esp-3); border-radius: var(--raio-p); background: var(--destaque-suave); color: var(--destaque-forte); font-weight: 650; font-size: 14px; }
+.tour__dica-clique .icone { width: 16px; height: 16px; flex-shrink: 0; }
+.tour__rodape { display: flex; justify-content: space-between; align-items: center; gap: var(--esp-2); flex-wrap: wrap; }
+.tour__rodape .botao { min-height: 40px; }
+.tour__balao--largo .tour__rodape:has(> :nth-child(3)) { display: grid; grid-template-columns: 1fr; }   /* vários botões: um embaixo do outro */
+.tour__balao--largo .tour__rodape:has(> :nth-child(3)) .botao { width: 100%; }
+
+@media (max-width: 599px) {
+  .tour__balao { padding: var(--esp-4); }
+  .tour__balao--centro { top: auto !important; bottom: 12px; transform: translateX(-50%); max-height: calc(100dvh - 24px); overflow-y: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .tour__anel, .tour__balao { transition: none; animation: none !important; } }
+body.sem-animacoes .tour__sombra, body.sem-animacoes .tour__anel, body.sem-animacoes .tour__balao { transition: none; animation: none !important; }
+
+/* ---------- Ilustrações das boas-vindas ---------- */
+.tour-ilustra--cartoes { display: flex; justify-content: center; gap: var(--esp-3); padding: var(--esp-2) 0 var(--esp-1); }
+.tour-mini { width: 128px; height: 82px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; background: var(--superficie-2); border: 1px solid var(--borda-forte); box-shadow: var(--sombra); }
+.tour-mini b { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--texto-suave); }
+.tour-mini i { width: 70%; height: 7px; border-radius: 99px; background: var(--superficie-3); }
+.tour-mini i + i { width: 46%; }
+.tour-mini--frente { transform: rotate(-4deg); }
+.tour-mini--verso { transform: rotate(3deg); border-color: color-mix(in srgb, var(--bom) 55%, transparent); }
+.tour-mini--verso b { color: var(--texto-verde); }
+
+.tour-pastas { list-style: none; padding: 0; display: grid; gap: 6px; }
+.tour-pastas li { display: flex; align-items: center; gap: var(--esp-3); padding: 6px var(--esp-3); border-radius: 10px; background: var(--superficie-2); }
+.tour-pastas li:nth-child(2) { margin-left: 18px; } .tour-pastas li:nth-child(3) { margin-left: 36px; } .tour-pastas li:nth-child(4) { margin-left: 54px; }
+.tour-pastas li > span:last-child { display: flex; flex-direction: column; line-height: 1.25; font-size: 13.5px; color: var(--texto-suave); }
+.tour-pastas b { font-size: 15px; color: var(--texto); }
+.tour-pastas .pasta-icone .icone, .tour-pastas__cartao .icone { width: 26px; height: 26px; }
+.tour-pastas__cartao { color: var(--texto-2); display: grid; }
+
+.tour-respostas { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.tour-respostas li { display: flex; flex-direction: column; gap: 2px; padding: 8px 6px; border-radius: 10px; text-align: center; font-size: 12px; line-height: 1.3; color: var(--texto-suave); background: var(--superficie-2); border-top: 3px solid; }
+.tour-respostas b { font-size: 14px; }
+.tour-respostas .resposta--errei { border-color: var(--errei); } .tour-respostas .resposta--errei b { color: var(--texto-vermelho); }
+.tour-respostas .resposta--dificil { border-color: var(--dificil); } .tour-respostas .resposta--dificil b { color: var(--texto-ambar); }
+.tour-respostas .resposta--bom { border-color: var(--bom); } .tour-respostas .resposta--bom b { color: var(--texto-verde); }
+.tour-respostas .resposta--facil { border-color: var(--facil); } .tour-respostas .resposta--facil b { color: var(--texto-azul); }
+@media (max-width: 420px) { .tour-respostas { grid-template-columns: repeat(2, 1fr); } }
+
+.tour-lista { list-style: none; padding: 0; display: grid; gap: var(--esp-3); }
+.tour-lista li { display: grid; grid-template-columns: 34px 1fr; gap: var(--esp-3); align-items: start; }
+.tour-lista .icone { width: 34px; height: 34px; padding: 7px; border-radius: 10px; background: var(--destaque-suave); color: var(--destaque-forte); }
+.tour-lista--compacta { gap: var(--esp-2); }
+.tour-lista--compacta li { grid-template-columns: 28px 1fr; gap: var(--esp-2); }
+.tour-lista--compacta .icone { width: 28px; height: 28px; padding: 5px; }
+
+/* ---------- Botão "?" no topo das páginas ---------- */
+.botao-ajuda { color: var(--texto-suave); }
+.botao-ajuda:hover { color: var(--destaque-forte); }
+.icone--texto { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -.18em; }
+
+/* ---------- Primeiros passos (Início) ---------- */
+.primeiros-passos { border-color: color-mix(in srgb, var(--destaque) 40%, var(--borda)); background:
+  linear-gradient(135deg, color-mix(in srgb, var(--destaque) 9%, transparent), transparent 55%), var(--superficie); }
+.primeiros-passos .painel__titulo { display: flex; align-items: center; gap: var(--esp-2); }
+.primeiros-passos--fim .painel__titulo .icone { color: var(--bom); width: 22px; height: 22px; }
+.primeiros-passos__barra { height: 6px; border-radius: 99px; background: var(--superficie-3); overflow: hidden; margin: var(--esp-3) 0 var(--esp-4); }
+.primeiros-passos__barra span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--destaque), var(--bom)); transition: width 400ms ease; }
+.primeiros-passos--fim .primeiros-passos__barra { margin-bottom: 0; }
+.primeiros-passos__lista { list-style: none; padding: 0; display: grid; gap: var(--esp-2); grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.passo-inicial { display: flex; align-items: center; gap: var(--esp-3); padding: var(--esp-3); border-radius: var(--raio); border: 1px solid var(--borda); background: var(--fundo); min-height: 72px; }
+.passo-inicial__marca { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; border: 2px solid var(--borda-forte); font-weight: 800; font-size: 14px; color: var(--texto-suave); }
+.passo-inicial__marca .icone { width: 18px; height: 18px; }
+.passo-inicial__textos { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.passo-inicial__titulo { font-weight: 700; }
+.passo-inicial__texto { font-size: 13.5px; color: var(--texto-suave); }
+.passo-inicial .botao { flex-shrink: 0; }
+.passo-inicial--proximo { border-color: var(--destaque); box-shadow: 0 0 0 3px var(--destaque-suave); }
+.passo-inicial--proximo .passo-inicial__marca { border-color: var(--destaque); color: var(--destaque-forte); }
+.passo-inicial--feito { background: transparent; border-style: dashed; }
+.passo-inicial--feito .passo-inicial__marca { background: var(--bom); border-color: var(--bom); color: #0b0d12; }
+.passo-inicial--feito .passo-inicial__titulo { color: var(--texto-suave); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--texto-suave) 60%, transparent); }
+.passo-inicial--bloqueado { opacity: .6; }
+.primeiros-passos + .painel, .primeiros-passos + .resumo { margin-top: var(--esp-5); }
